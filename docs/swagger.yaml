@@ -1,0 +1,169 @@
+basePath: /api/v1
+definitions:
+  core.Note:
+    properties:
+      content:
+        type: string
+      createdAt:
+        type: string
+      id:
+        format: int64
+        type: integer
+      title:
+        type: string
+      updatedAt:
+        type: string
+    type: object
+info:
+  contact:
+    email: example@university.ru
+    name: Backend Course
+  description: Учебный REST API для заметок (CRUD).
+  title: Notes API
+  version: "1.0"
+paths:
+  /notes:
+    get:
+      description: Возвращает список заметок с пагинацией и фильтром по заголовку
+      parameters:
+      - description: Номер страницы
+        in: query
+        name: page
+        type: integer
+      - description: Размер страницы
+        in: query
+        name: limit
+        type: integer
+      - description: Поиск по title
+        in: query
+        name: q
+        type: string
+      responses:
+        "200":
+          description: OK
+          headers:
+            X-Total-Count:
+              description: Общее количество
+              type: integer
+          schema:
+            items:
+              $ref: '#/definitions/core.Note'
+            type: array
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Список заметок
+      tags:
+      - notes
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Данные новой заметки
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/core.Note'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            $ref: '#/definitions/core.Note'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Создать заметку
+      tags:
+      - notes
+  /notes/{id}:
+    delete:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "204":
+          description: No Content
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Удалить заметку
+      tags:
+      - notes
+    get:
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Note'
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Получить заметку
+      tags:
+      - notes
+    patch:
+      consumes:
+      - application/json
+      parameters:
+      - description: ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Поля для обновления
+        in: body
+        name: input
+        required: true
+        schema:
+          $ref: '#/definitions/core.Note'
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/core.Note'
+        "400":
+          description: Bad Request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Not Found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Обновить заметку (частично)
+      tags:
+      - notes
+swagger: "2.0"

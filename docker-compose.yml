@@ -1,0 +1,12 @@
+services:
+  db:
+    image: postgres:16
+    command: >
+      postgres
+      -c shared_preload_libraries=pg_stat_statements
+    environment:
+      POSTGRES_PASSWORD: pass
+      POSTGRES_USER: user
+      POSTGRES_DB: notes
+    ports:
+      - "5432:5432"
